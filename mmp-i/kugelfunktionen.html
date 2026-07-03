@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eigenwertprobleme &amp; Kugelfunktionen — MMP I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<link rel="stylesheet" href="../assets/css/lcars.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "../assets/js/vendor/three/three.module.min.js",
+    "three/addons/": "../assets/js/vendor/three/addons/"
+  }
+}
+</script>
+</head>
+<body>
+<div class="lcars-frame">
+  <div class="lcars-sidebar">
+    <div class="lcars-elbow--top"></div>
+    <a class="lcars-bar" href="index.html">Übersicht</a>
+    <a class="lcars-bar lcars-bar--lilac" href="../index.html">Hauptmenü</a>
+    <span class="lcars-bar lcars-bar--blue">LCARS 24.7</span>
+    <div class="lcars-bar--spacer"></div>
+    <span class="lcars-bar lcars-bar--gold">Stardate 2026.184</span>
+    <div class="lcars-elbow--bottom"></div>
+  </div>
+
+  <div class="lcars-header">
+    <a class="lcars-breadcrumb" href="index.html">« MMP I</a>
+    <h1 class="lcars-title">Eigenwertprobleme &amp; Kugelfunktionen</h1>
+    <p class="lcars-subtitle">Separation der Variablen — von der Saite zur Kugel</p>
+  </div>
+
+  <div class="lcars-main">
+
+    <section class="lcars-panel">
+      <div class="lcars-panel__header">
+        <p class="lcars-panel__label">01 · Einführung</p>
+      </div>
+      <div class="lcars-panel__body">
+        <p>
+          Viele Randwertprobleme der Physik — die schwingende Saite, die
+          Trommelmembran, das Wasserstoffatom — führen auf dieselbe Struktur:
+          Ein linearer Differentialoperator \(\mathcal{L}\) soll die
+          Eigenwertgleichung
+        </p>
+        <p>\[ \mathcal{L} u = \lambda u \]</p>
+        <p>
+          auf einem Gebiet mit Randbedingungen (z.B. \(u=0\) am Rand) lösen.
+          Die <strong>Separation der Variablen</strong> zerlegt das Problem in
+          eine Kette gewöhnlicher Differentialgleichungen — eine pro
+          Koordinate. Die Randbedingungen erlauben dabei nur ganz bestimmte,
+          diskrete Eigenwerte \(\lambda\): Das System <em>quantisiert</em>
+          sich von selbst. Genau dieses Muster wiederholt sich unten in drei
+          Beispielen wachsender Dimension, bevor wir uns dem wichtigsten
+          Beispiel — den Kugelfunktionen — im Detail widmen.
+        </p>
+      </div>
+    </section>
+
+    <section class="lcars-panel">
+      <div class="lcars-panel__header lcars-panel__header--lilac">
+        <p class="lcars-panel__label">02 · Eigenwertprobleme im Vergleich</p>
+      </div>
+      <div class="lcars-panel__body">
+        <p>
+          Dieselbe Idee in 1D, 2D und 3D: feste Ränder erzwingen stehende
+          Wellen mit ganzzahligen Modenzahlen. Bewege die Regler und
+          beobachte, wie sich die Knotenlinien vermehren, während der
+          Eigenwert \(\lambda\) wächst.
+        </p>
+
+        <div class="lcars-trio">
+
+          <div class="lcars-trio__card">
+            <h3 class="lcars-trio__title">Saite (1D)</h3>
+            <p class="lcars-trio__formula">\(-u'' = \lambda u,\ u(0)=u(L)=0\)</p>
+            <div class="lcars-graph-wrap">
+              <svg id="string-graph" viewBox="0 0 800 260" role="img" aria-label="Stehende Welle einer schwingenden Saite">
+                <rect x="0" y="0" width="800" height="260" fill="#050505"></rect>
+                <g class="em-grid"></g>
+                <path class="em-curve" d=""></path>
+                <g class="em-nodes"></g>
+              </svg>
+            </div>
+            <div class="lcars-slider-row">
+              <label for="string-n">n</label>
+              <input type="range" id="string-n" min="1" max="8" step="1" value="2">
+            </div>
+            <div class="lcars-readouts">
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">n</span>
+                <span class="lcars-readout__value" id="str-n">2</span>
+              </div>
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">λₙ</span>
+                <span class="lcars-readout__value" id="str-lambda">—</span>
+              </div>
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">ωₙ</span>
+                <span class="lcars-readout__value" id="str-omega">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lcars-trio__card">
+            <h3 class="lcars-trio__title">Membran (2D)</h3>
+            <p class="lcars-trio__formula">\(-\Delta u = \lambda u,\ u|_{\partial D}=0\)</p>
+            <div class="lcars-viewer-wrap">
+              <canvas id="membrane-canvas" width="320" height="320" style="width:100%;height:auto;aspect-ratio:1;"></canvas>
+            </div>
+            <div class="lcars-slider-row">
+              <label for="membrane-m">m</label>
+              <input type="range" id="membrane-m" min="0" max="3" step="1" value="1">
+            </div>
+            <div class="lcars-slider-row">
+              <label for="membrane-k">k</label>
+              <input type="range" id="membrane-k" min="1" max="4" step="1" value="1">
+            </div>
+            <div class="lcars-readouts">
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">m, k</span>
+                <span class="lcars-readout__value"><span id="mem-m">1</span>, <span id="mem-k">1</span></span>
+              </div>
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">λ</span>
+                <span class="lcars-readout__value" id="mem-lambda">—</span>
+              </div>
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">ω</span>
+                <span class="lcars-readout__value" id="mem-omega">—</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lcars-trio__card">
+            <h3 class="lcars-trio__title">Kugel (3D)</h3>
+            <p class="lcars-trio__formula">\(-\Delta_{S^2} Y = l(l+1) Y\)</p>
+            <div class="lcars-viewer-wrap">
+              <div id="mini-sphere-viewer" class="lcars-viewer"></div>
+            </div>
+            <div class="lcars-slider-row">
+              <label for="mini-sh-l">l</label>
+              <input type="range" id="mini-sh-l" min="0" max="4" step="1" value="2">
+            </div>
+            <div class="lcars-slider-row">
+              <label for="mini-sh-m">m</label>
+              <input type="range" id="mini-sh-m" min="-4" max="4" step="1" value="0">
+            </div>
+            <div class="lcars-readouts">
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">l, m</span>
+                <span class="lcars-readout__value"><span id="mini-sh-l-val">2</span>, <span id="mini-sh-m-val">0</span></span>
+              </div>
+              <div class="lcars-readout">
+                <span class="lcars-readout__label">λ = l(l+1)</span>
+                <span class="lcars-readout__value" id="mini-sh-lambda">—</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="lcars-panel">
+      <div class="lcars-panel__header lcars-panel__header--blue">
+        <p class="lcars-panel__label">03 · Kugelfunktionen im Detail</p>
+      </div>
+      <div class="lcars-panel__body">
+        <p>
+          Der Winkelanteil der Laplace-Gleichung in Kugelkoordinaten liefert
+          die Eigenwertgleichung des Laplace-Beltrami-Operators auf der
+          Einheitskugel:
+        </p>
+        <p>\[ -\Delta_{S^2}\, Y_l^m(\theta,\varphi) = l(l+1)\, Y_l^m(\theta,\varphi), \qquad l \in \mathbb{N}_0,\ m \in \{-l,\dots,l\} \]</p>
+        <p>
+          Die reellen, orthonormierten Kugelfunktionen sind gegeben durch
+        </p>
+        <p>\[
+          Y_l^m(\theta,\varphi) = N_l^{|m|}\, P_l^{|m|}(\cos\theta) \cdot
+          \begin{cases}
+            \sqrt{2}\cos(m\varphi) & m > 0 \\
+            1 & m = 0 \\
+            \sqrt{2}\sin(|m|\varphi) & m < 0
+          \end{cases},
+          \qquad N_l^{m} = \sqrt{\dfrac{2l+1}{4\pi}\dfrac{(l-m)!}{(l+m)!}}
+        \]</p>
+        <p>
+          wobei \(P_l^m\) die zugeordneten Legendrepolynome sind. Drehe das
+          Modell mit der Maus (oder per Touch), wähle Grad \(l\) und Ordnung
+          \(m\), und schalte zwischen der eingefärbten Kugel — dem klassischen
+          Lehrbuchbild der Knotenlinien — und der "Orbital"-Darstellung um,
+          bei der der Radius proportional zu \(|Y_l^m|\) ist.
+        </p>
+
+        <div class="lcars-viewer-wrap">
+          <div id="sphere-viewer" class="lcars-viewer lcars-viewer--tall"></div>
+        </div>
+
+        <div class="lcars-controls">
+          <button id="sh-mode-sphere" class="lcars-button lcars-button--blue lcars-button--small lcars-button--active" type="button">Kugel (Farbe)</button>
+          <button id="sh-mode-lobes" class="lcars-button lcars-button--lilac lcars-button--small" type="button">Lappen (Radius = |Y|)</button>
+        </div>
+
+        <div class="lcars-slider-row">
+          <label for="sh-l">Grad l</label>
+          <input type="range" id="sh-l" min="0" max="6" step="1" value="2">
+          <span class="lcars-slider-value" id="sh-l-val">2</span>
+        </div>
+        <div class="lcars-slider-row">
+          <label for="sh-m">Ordnung m</label>
+          <input type="range" id="sh-m" min="-6" max="6" step="1" value="0">
+          <span class="lcars-slider-value" id="sh-m-val">0</span>
+        </div>
+
+        <div class="lcars-legend">
+          <span class="lcars-legend__item"><span class="lcars-legend__swatch" style="background:#ff9c00;"></span>Y &gt; 0</span>
+          <span class="lcars-legend__item"><span class="lcars-legend__swatch" style="background:#9999ff;"></span>Y &lt; 0</span>
+          <span class="lcars-legend__item"><span class="lcars-legend__swatch" style="background:#121212;"></span>Knotenlinie (Y ≈ 0)</span>
+        </div>
+
+        <div class="lcars-readouts">
+          <div class="lcars-readout">
+            <span class="lcars-readout__label">Grad l</span>
+            <span class="lcars-readout__value" id="sh-readout-l">2</span>
+          </div>
+          <div class="lcars-readout">
+            <span class="lcars-readout__label">Ordnung m</span>
+            <span class="lcars-readout__value" id="sh-readout-m">0</span>
+          </div>
+          <div class="lcars-readout">
+            <span class="lcars-readout__label">Eigenwert λ = l(l+1)</span>
+            <span class="lcars-readout__value" id="sh-readout-lambda">6</span>
+          </div>
+          <div class="lcars-readout">
+            <span class="lcars-readout__label">Knotenkreise (θ)</span>
+            <span class="lcars-readout__value" id="sh-readout-nodes-theta">—</span>
+          </div>
+          <div class="lcars-readout">
+            <span class="lcars-readout__label">Knotenmeridiane (φ)</span>
+            <span class="lcars-readout__value" id="sh-readout-nodes-phi">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lcars-panel">
+      <div class="lcars-panel__header">
+        <p class="lcars-panel__label">04 · Die ersten Kugelfunktionen</p>
+      </div>
+      <div class="lcars-panel__body">
+        <p>Explizit ausgeschrieben für \(l = 0, 1, 2\) (mit \(x=\cos\theta\)):</p>
+        <table class="lcars-table">
+          <thead>
+            <tr><th style="text-align:left;">l</th><th style="text-align:left;">m</th><th style="text-align:left;">Y_l^m(\theta,\varphi)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="text-align:left;">0</td><td style="text-align:left;">0</td><td style="text-align:left;">\(\dfrac{1}{2}\sqrt{\dfrac{1}{\pi}}\)</td></tr>
+            <tr><td style="text-align:left;">1</td><td style="text-align:left;">0</td><td style="text-align:left;">\(\dfrac{1}{2}\sqrt{\dfrac{3}{\pi}}\cos\theta\)</td></tr>
+            <tr><td style="text-align:left;">1</td><td style="text-align:left;">±1</td><td style="text-align:left;">\(\dfrac{1}{2}\sqrt{\dfrac{3}{2\pi}}\sin\theta\,\{\cos\varphi,\sin\varphi\}\)</td></tr>
+            <tr><td style="text-align:left;">2</td><td style="text-align:left;">0</td><td style="text-align:left;">\(\dfrac{1}{4}\sqrt{\dfrac{5}{\pi}}(3\cos^2\theta-1)\)</td></tr>
+            <tr><td style="text-align:left;">2</td><td style="text-align:left;">±1</td><td style="text-align:left;">\(\dfrac{1}{2}\sqrt{\dfrac{15}{2\pi}}\sin\theta\cos\theta\,\{\cos\varphi,\sin\varphi\}\)</td></tr>
+            <tr><td style="text-align:left;">2</td><td style="text-align:left;">±2</td><td style="text-align:left;">\(\dfrac{1}{4}\sqrt{\dfrac{15}{2\pi}}\sin^2\theta\,\{\cos2\varphi,\sin2\varphi\}\)</td></tr>
+          </tbody>
+        </table>
+        <p>
+          Setze oben \(l=0,1,2\) mit den entsprechenden \(m\)-Werten ein und
+          vergleiche die Form mit dieser Tabelle — insbesondere die Anzahl
+          der Knotenlinien: \(l-|m|\) Breitenkreise und \(|m|\) Längenkreise
+          (Meridiane).
+        </p>
+      </div>
+    </section>
+
+    <section class="lcars-panel">
+      <div class="lcars-panel__header lcars-panel__header--lilac">
+        <p class="lcars-panel__label">05 · Ausblick</p>
+      </div>
+      <div class="lcars-panel__body">
+        <p>
+          Kugelfunktionen sind der Winkelanteil jeder Lösung der
+          Laplace-Gleichung in Kugelkoordinaten und tauchen deshalb überall
+          dort wieder auf, wo Kugelsymmetrie herrscht — vom Gravitationsfeld
+          der Erde bis zu den Elektronenorbitalen. Im kommenden Kapitel
+          <em>Das Wasserstoffatom</em> kombinieren wir sie mit den
+          Laguerre-Polynomen des Radialteils zu den vollständigen
+          Orbitalen \(\psi_{n\ell m}\).
+        </p>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '\\[', right: '\\]', display: true},
+      {left: '\\(', right: '\\)', display: false}
+    ]
+  });"></script>
+
+<script src="../assets/js/mmp-math.js"></script>
+<script src="../assets/js/eigenmodes-string.js"></script>
+<script src="../assets/js/eigenmodes-membrane.js"></script>
+<script>
+  initStringMode('string-graph', 'str', { sliderId: 'string-n' });
+  initMembraneMode('membrane-canvas', 'mem', { mSliderId: 'membrane-m', kSliderId: 'membrane-k' });
+</script>
+
+<script type="module">
+  import { createSphericalHarmonicsViewer } from "../assets/js/sphere-harmonics-viewer.js";
+
+  function nodeCounts(l, m) {
+    const absM = Math.abs(m);
+    return { theta: l - absM, phi: absM };
+  }
+
+  // --- Main viewer (section 03) ---
+  const mainContainer = document.getElementById("sphere-viewer");
+  const mainViewer = createSphericalHarmonicsViewer(mainContainer, { resolution: 90 });
+
+  const lSlider = document.getElementById("sh-l");
+  const mSlider = document.getElementById("sh-m");
+  const btnSphere = document.getElementById("sh-mode-sphere");
+  const btnLobes = document.getElementById("sh-mode-lobes");
+  let mainMode = "sphere";
+
+  function clampMSlider() {
+    const l = Number(lSlider.value);
+    mSlider.min = String(-l);
+    mSlider.max = String(l);
+    if (Number(mSlider.value) > l) mSlider.value = String(l);
+    if (Number(mSlider.value) < -l) mSlider.value = String(-l);
+  }
+
+  function updateMain() {
+    clampMSlider();
+    const l = Number(lSlider.value);
+    const m = Number(mSlider.value);
+    mainViewer.setMode(l, m, mainMode);
+
+    document.getElementById("sh-l-val").textContent = String(l);
+    document.getElementById("sh-m-val").textContent = String(m);
+    document.getElementById("sh-readout-l").textContent = String(l);
+    document.getElementById("sh-readout-m").textContent = String(m);
+    document.getElementById("sh-readout-lambda").textContent = String(l * (l + 1));
+    const nodes = nodeCounts(l, m);
+    document.getElementById("sh-readout-nodes-theta").textContent = String(nodes.theta);
+    document.getElementById("sh-readout-nodes-phi").textContent = String(nodes.phi);
+  }
+
+  lSlider.addEventListener("input", updateMain);
+  mSlider.addEventListener("input", updateMain);
+  btnSphere.addEventListener("click", () => {
+    mainMode = "sphere";
+    btnSphere.classList.add("lcars-button--active");
+    btnLobes.classList.remove("lcars-button--active");
+    updateMain();
+  });
+  btnLobes.addEventListener("click", () => {
+    mainMode = "lobes";
+    btnLobes.classList.add("lcars-button--active");
+    btnSphere.classList.remove("lcars-button--active");
+    updateMain();
+  });
+  updateMain();
+
+  // --- Mini viewer (section 02, trio comparison) ---
+  const miniContainer = document.getElementById("mini-sphere-viewer");
+  const miniViewer = createSphericalHarmonicsViewer(miniContainer, { resolution: 48 });
+  const miniL = document.getElementById("mini-sh-l");
+  const miniM = document.getElementById("mini-sh-m");
+
+  function updateMini() {
+    const l = Number(miniL.value);
+    miniM.min = String(-l);
+    miniM.max = String(l);
+    if (Number(miniM.value) > l) miniM.value = String(l);
+    if (Number(miniM.value) < -l) miniM.value = String(-l);
+    const m = Number(miniM.value);
+    miniViewer.setMode(l, m, "sphere");
+    document.getElementById("mini-sh-l-val").textContent = String(l);
+    document.getElementById("mini-sh-m-val").textContent = String(m);
+    document.getElementById("mini-sh-lambda").textContent = String(l * (l + 1));
+  }
+
+  miniL.addEventListener("input", updateMini);
+  miniM.addEventListener("input", updateMini);
+  updateMini();
+</script>
+</body>
+</html>
