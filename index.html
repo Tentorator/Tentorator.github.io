@@ -8,15 +8,71 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/lcars.css">
+<script type="importmap">
+{
+  "imports": {
+    "three": "./assets/js/vendor/three/three.module.min.js",
+    "three/addons/": "./assets/js/vendor/three/addons/"
+  }
+}
+</script>
 </head>
 <body>
-<div class="lcars-splash">
-  <div class="lcars-splash__panel">
-    <p class="lcars-subtitle">Bordcomputer — Zugriff gewährt</p>
-    <h1 class="lcars-splash__title">Tentorator</h1>
-    <p>Interaktive Lernmaterialien für Mathematik und Numerische Methoden.</p>
-    <a class="lcars-button" href="numerische-methoden/index.html">Numerische Methoden ▸</a>
+<div class="lcars-frame">
+  <div class="lcars-sidebar">
+    <div class="lcars-elbow--top"></div>
+    <span class="lcars-bar">Bordcomputer</span>
+    <span class="lcars-bar lcars-bar--lilac">Themenwahl</span>
+    <span class="lcars-bar lcars-bar--blue">LCARS 24.7</span>
+    <div class="lcars-bar--spacer"></div>
+    <span class="lcars-bar lcars-bar--gold">Stardate 2026.184</span>
+    <div class="lcars-elbow--bottom"></div>
+  </div>
+
+  <div class="lcars-header">
+    <h1 class="lcars-title">Tentorator</h1>
+    <p class="lcars-subtitle">Interaktive Lernmaterialien — Fächerübersicht</p>
+  </div>
+
+  <div class="lcars-main">
+    <div class="lcars-tiles">
+
+      <a class="lcars-tile lcars-tile--hero" href="mmp-i/index.html">
+        <span class="lcars-tile__badge">System aktiv</span>
+        <h2 class="lcars-tile__title">MMP I</h2>
+        <p style="margin:0;">Mathematische Methoden der Physik — Eigenwertprobleme, Kugelfunktionen und mehr</p>
+      </a>
+
+      <a class="lcars-tile" style="grid-column: span 3; background: linear-gradient(120deg, var(--lcars-blue), var(--lcars-ice-blue)); color: var(--lcars-black);" href="numerische-methoden/index.html">
+        <span class="lcars-tile__badge">System aktiv</span>
+        <h2 class="lcars-tile__title">Numerische Methoden</h2>
+        <p style="margin:0;">Lineare Ausgleichsrechnung — mit interaktivem Graphen</p>
+      </a>
+
+      <div class="lcars-tile lcars-tile--stub" aria-disabled="true">
+        <span class="lcars-tile__badge">Bald verfügbar</span>
+        <h2 class="lcars-tile__title">Weitere Fächer</h2>
+      </div>
+
+    </div>
+
+    <section class="lcars-panel">
+      <div class="lcars-panel__header lcars-panel__header--blue">
+        <p class="lcars-panel__label">3D-Testmodell</p>
+      </div>
+      <div class="lcars-panel__body">
+        <p>Terrain-Mesh, frei drehbar — ziehen zum Rotieren, Scrollen/Pinch zum Zoomen.</p>
+        <div class="lcars-viewer-wrap">
+          <div id="terrain-viewer" class="lcars-viewer lcars-viewer--tall"></div>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
+
+<script type="module">
+  import { createTerrainViewer } from "./assets/js/terrain-viewer.js";
+  createTerrainViewer(document.getElementById("terrain-viewer"), "assets/models/terrain-126506.stl");
+</script>
 </body>
 </html>

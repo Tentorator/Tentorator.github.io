@@ -476,6 +476,157 @@ li {
   margin: 0 0 16px;
 }
 
+/* ---------- Sliders ---------- */
+
+.lcars-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.lcars-slider-row label {
+  font-family: var(--font-mono-digit);
+  color: var(--lcars-peach);
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  min-width: 70px;
+}
+
+.lcars-slider-row input[type="range"] {
+  flex: 1;
+  min-width: 140px;
+  accent-color: var(--lcars-orange);
+  height: 6px;
+}
+
+.lcars-slider-value {
+  font-family: var(--font-mono-digit);
+  color: var(--lcars-ice-blue);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ---------- 3D / canvas viewers ---------- */
+
+.lcars-viewer-wrap {
+  background: #050505;
+  border-radius: 12px;
+  padding: 8px;
+  position: relative;
+}
+
+.lcars-viewer-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  touch-action: none;
+}
+
+.lcars-viewer {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.lcars-viewer--tall {
+  aspect-ratio: 16 / 10;
+}
+
+.lcars-viewer-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-mono-digit);
+  color: var(--lcars-peach);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+/* ---------- Toggle button group ---------- */
+
+.lcars-button--active {
+  box-shadow: 0 0 0 3px var(--lcars-ice-blue) inset;
+}
+
+/* ---------- Trio comparison grid ---------- */
+
+.lcars-trio {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+  margin-top: 20px;
+}
+
+.lcars-trio__card {
+  background: #0d0d0d;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lcars-trio__title {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: var(--lcars-pale-gold);
+  font-size: 1rem;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.lcars-trio__formula {
+  font-family: var(--font-mono-digit);
+  font-size: 0.8rem;
+  color: var(--lcars-ice-blue);
+  margin: 0;
+}
+
+/* ---------- Color legend ---------- */
+
+.lcars-legend {
+  display: flex;
+  gap: 18px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.lcars-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono-digit);
+  font-size: 0.75rem;
+  color: var(--lcars-ice-blue);
+  letter-spacing: 0.04em;
+}
+
+.lcars-legend__swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* ---------- Vibrating string mode shapes ---------- */
+
+.em-curve {
+  fill: none;
+  stroke: var(--lcars-ice-blue);
+  stroke-width: 3;
+}
+
+.em-node {
+  fill: var(--lcars-orange);
+}
+
 /* ---------- Responsive ---------- */
 
 @media (max-width: 720px) {
@@ -495,5 +646,9 @@ li {
   .lcars-tile--hero,
   .lcars-tile--stub {
     grid-column: span 6;
+  }
+
+  .lcars-trio {
+    grid-template-columns: 1fr;
   }
 }
